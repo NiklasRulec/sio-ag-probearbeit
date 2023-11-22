@@ -1,0 +1,27 @@
+.time-input-section {
+  width: 50%;
+  height: 50rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.time-input-section .time-input-form {
+  width: 70%;
+  height: 30rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.time-input-section .time-input-form label {
+  margin-bottom: 1rem;
+}
+
+.time-input-section .time-input-form input {
+  width: 20rem;
+  height: 3rem;
+  margin-bottom: 2rem;
+}

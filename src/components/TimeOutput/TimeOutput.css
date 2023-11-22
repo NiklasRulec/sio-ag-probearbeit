@@ -1,0 +1,85 @@
+.time-output-section {
+  width: 50%;
+  height: 50rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.time-output-section h2 {
+  margin-bottom: 2rem;
+}
+
+/*! +++++ Table +++++ */
+
+.time-output-section table {
+  width: 70%;
+  height: 30rem;
+}
+
+/*! +++++ Table Head +++++ */
+
+.time-output-section table thead {
+  width: 100%;
+  height: 2rem;
+}
+
+.time-output-section table thead tr {
+  width: 100%;
+  height: 2rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.time-output-section table thead tr th {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*! +++++ Table Body +++++ */
+
+.time-output-section tbody {
+  width: 100%;
+  max-height: 25rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+
+.time-output-section tbody tr {
+  width: 100%;
+  height: 2rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.time-output-section tbody tr td {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-output-section tbody tr td input {
+  width: 100%;
+  height: 100%;
+}
+
+.time-output-section tbody tr .td-icons {
+  width: 20%;
+}
+
+.time-output-section tbody tr .td-icons :nth-child(1),
+.time-output-section tbody tr .td-icons :nth-child(2) {
+  cursor: pointer;
+}
