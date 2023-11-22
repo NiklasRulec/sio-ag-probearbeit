@@ -83,3 +83,16 @@
 .time-output-section tbody tr .td-icons :nth-child(2) {
   cursor: pointer;
 }
+
+.time-output-section .total-output-section {
+  width: 100%;
+  height: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.time-output-section .total-output-section h3 {
+  margin-bottom: 1rem;
+}

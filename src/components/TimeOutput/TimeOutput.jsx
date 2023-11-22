@@ -9,6 +9,7 @@ const TimeOutput = () => {
   const { update, setUpdate } = useContext(updateContext);
   const [workDays, setWorkDays] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [editedRowIndex, setEditedRowIndex] = useState(null);
 
   // Updated Values
   const [updatedDate, setUpdatedDate] = useState("");
@@ -16,15 +17,12 @@ const TimeOutput = () => {
   const [updatedEnd, setUpdatedEnd] = useState("");
 
   // workDays laden
-  useEffect(() => {
-    localStorage.getItem("workDays")
-      ? setWorkDays(JSON.parse(localStorage.getItem("workDays")))
-      : setWorkDays([]);
-  }, []);
 
   useEffect(() => {
     if (localStorage.getItem("workDays")) {
       setWorkDays(JSON.parse(localStorage.getItem("workDays")));
+    } else {
+      setWorkDays([]);
     }
   }, [update]);
 
@@ -56,11 +54,11 @@ const TimeOutput = () => {
     workDaysCopy[index] = originalWorkDay;
     localStorage.setItem("workDays", JSON.stringify(workDaysCopy));
     setEditMode(false);
+    setEditedRowIndex(null);
     setUpdate(!update);
-    console.log("saved");
   };
 
-  // Tägliche Arbeitszeit
+  // Tägliche Arbeitszeit berechnen
   const calculateDailyWorkTime = (workDay) => {
     let hours =
       parseInt(workDay.end.split(":")[0]) -
@@ -109,7 +107,7 @@ const TimeOutput = () => {
         <tbody>
           {workDays.map((workDay, index) => (
             <tr key={index}>
-              {editMode ? (
+              {editMode && editedRowIndex === index ? (
                 <td>
                   <input
                     type="text"
@@ -120,7 +118,7 @@ const TimeOutput = () => {
               ) : (
                 <td>{workDay.date}</td>
               )}
-              {editMode ? (
+              {editMode && editedRowIndex === index ? (
                 <td>
                   <input
                     type="text"
@@ -131,7 +129,7 @@ const TimeOutput = () => {
               ) : (
                 <td>{workDay.start}</td>
               )}
-              {editMode ? (
+              {editMode && editedRowIndex === index ? (
                 <td>
                   <input
                     type="text"
@@ -144,12 +142,17 @@ const TimeOutput = () => {
               )}
               <td>{workDay.duration} Std.</td>
               <td className="td-icons">
-                {editMode ? (
+                {editMode && editedRowIndex === index ? (
                   <div onClick={() => safeEditedWorkday(index)}>
                     <SafeIcon />
                   </div>
                 ) : (
-                  <div onClick={() => setEditMode(true)}>
+                  <div
+                    onClick={() => {
+                      setEditedRowIndex(index);
+                      setEditMode(true);
+                    }}
+                  >
                     <EditIcon />
                   </div>
                 )}
@@ -161,12 +164,9 @@ const TimeOutput = () => {
           ))}
         </tbody>
       </table>
-      <article>
-        <h2>Gesamtarbeitszeit</h2>
-        <h3>
-          Durchschnittliche Tagesarbeitszeit: {dailyAverage(workDays)} Stunden
-        </h3>
-        <h3>Monat: {monthlyWorktime(workDays)} Stunden</h3>
+      <article className="total-output-section">
+        <h3>Ø Tagesarbeitszeit: {dailyAverage(workDays)} Stunden</h3>
+        <h3>Gesamter Monat: {monthlyWorktime(workDays)} Stunden</h3>
       </article>
     </section>
   );
