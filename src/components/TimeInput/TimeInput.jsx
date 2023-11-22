@@ -41,7 +41,13 @@ const TimeInput = () => {
 
     // Endzeit erstellen
     let endHour = new Date(endTime).getHours();
+    if (endHour < 10) {
+      endHour = `0${endHour}`;
+    }
     let endMinute = new Date(endTime).getMinutes();
+    if (endMinute < 10) {
+      endMinute = `0${endMinute}`;
+    }
     let endTimeString = `${endHour}:${endMinute}`;
 
     // Arbeitszeit berechnen

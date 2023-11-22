@@ -4,6 +4,7 @@ import EditIcon from "../../assets/icons/EditIcon/EditIcon";
 import { updateContext } from "../../context/Context";
 import DeleteIcon from "../../assets/icons/DeleteIcon/DeleteIcon";
 import SafeIcon from "../../assets/icons/SafeIcon/SafeIcon";
+import TimeChart from "../TimeChart";
 
 const TimeOutput = () => {
   const { update, setUpdate } = useContext(updateContext);
@@ -14,7 +15,6 @@ const TimeOutput = () => {
   const [updatedDate, setUpdatedDate] = useState("");
   const [updatedStart, setUpdatedStart] = useState("");
   const [updatedEnd, setUpdatedEnd] = useState("");
-  const [updatedDuration, setUpdatedDuration] = useState("");
 
   // workDays laden
   useEffect(() => {
@@ -37,7 +37,6 @@ const TimeOutput = () => {
   const safeEditedWorkday = (index) => {
     let workDaysCopy = [...workDays];
     const originalWorkDay = workDaysCopy[index];
-
     // Aktualisierte Werte auf Inhalt prüfen
     if (updatedDate.trim() !== "") {
       originalWorkDay.date = updatedDate;
@@ -48,15 +47,14 @@ const TimeOutput = () => {
     if (updatedEnd.trim() !== "") {
       originalWorkDay.end = updatedEnd;
     }
-
     // Arbeitszeit neu berechnen und speichern
-    const updatedDailyWorkTime = calculateDailyWorkTime(originalWorkDay);
-    originalWorkDay.duration = updatedDailyWorkTime;
-
+    const updatedWorktime = calculateDailyWorkTime(originalWorkDay);
+    originalWorkDay.duration = updatedWorktime;
     workDaysCopy[index] = originalWorkDay;
     localStorage.setItem("workDays", JSON.stringify(workDaysCopy));
     setEditMode(false);
     setUpdate(!update);
+    console.log("saved");
   };
 
   // Tägliche Arbeitszeit
@@ -91,10 +89,6 @@ const TimeOutput = () => {
       return acc + calculateDailyWorkTime(workDay);
     }, 0);
   };
-
-  useEffect(() => {
-    console.log(workDays);
-  }, [update]);
 
   return (
     <section className="time-output-section">
@@ -145,19 +139,17 @@ const TimeOutput = () => {
               ) : (
                 <td>{workDay.end}</td>
               )}
-              <td>{workDay.duration}</td>
+              <td>{workDay.duration} Std.</td>
               <td className="td-icons">
-                <div onClick={() => setEditMode(!editMode)}>
-                  {editMode ? (
-                    <div onClick={() => safeEditedWorkday(index)}>
-                      <SafeIcon />
-                    </div>
-                  ) : (
-                    <div>
-                      <EditIcon />
-                    </div>
-                  )}
-                </div>
+                {editMode ? (
+                  <div onClick={() => safeEditedWorkday(index)}>
+                    <SafeIcon />
+                  </div>
+                ) : (
+                  <div onClick={() => setEditMode(true)}>
+                    <EditIcon />
+                  </div>
+                )}
                 <div onClick={() => deleteWorkDay(index)}>
                   <DeleteIcon />
                 </div>
@@ -173,6 +165,8 @@ const TimeOutput = () => {
         </h3>
         <h3>Monat: {monthlyWorktime(workDays)} Stunden</h3>
       </article>
+
+      {/* <TimeChart workDays={workDays} /> */}
     </section>
   );
 };

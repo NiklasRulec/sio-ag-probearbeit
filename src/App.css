@@ -18,7 +18,8 @@ h2 {
   font-size: 2rem;
 }
 
-h3 {
+h3,
+label {
   font-size: 1.8rem;
 }
 
