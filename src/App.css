@@ -22,6 +22,10 @@ h3 {
   font-size: 1.8rem;
 }
 
+table {
+  font-size: 1.5rem;
+}
+
 .wrapper {
   max-width: 1440px;
   height: 80rem;

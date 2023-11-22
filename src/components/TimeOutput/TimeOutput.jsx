@@ -9,7 +9,6 @@ const TimeOutput = () => {
   const { update, setUpdate } = useContext(updateContext);
   const [workDays, setWorkDays] = useState([]);
   const [editMode, setEditMode] = useState(false);
-  const [sortedWorkDays, setSortedWorkDays] = useState([]);
 
   // Updated Values
   const [updatedDate, setUpdatedDate] = useState("");
@@ -38,72 +37,68 @@ const TimeOutput = () => {
   const safeEditedWorkday = (index) => {
     let workDaysCopy = [...workDays];
     const originalWorkDay = workDaysCopy[index];
+
+    // Aktualisierte Werte auf Inhalt prüfen
     if (updatedDate.trim() !== "") {
       originalWorkDay.date = updatedDate;
     }
     if (updatedStart.trim() !== "") {
       originalWorkDay.start = updatedStart;
-      if (updatedStart < 10) {
-        hours = `0${hours}`;
-      }
     }
     if (updatedEnd.trim() !== "") {
       originalWorkDay.end = updatedEnd;
     }
-    if (updatedDuration.trim() !== "") {
-      originalWorkDay.duration = updatedDuration;
-    }
+
+    // Arbeitszeit neu berechnen und speichern
+    const updatedDailyWorkTime = calculateDailyWorkTime(originalWorkDay);
+    originalWorkDay.duration = updatedDailyWorkTime;
+
     workDaysCopy[index] = originalWorkDay;
     localStorage.setItem("workDays", JSON.stringify(workDaysCopy));
     setEditMode(false);
     setUpdate(!update);
   };
 
-  // Arbeitstage sortieren
-  useEffect(() => {
-    const sortedDays = workDays
-      .slice()
-      .sort(
-        (a, b) =>
-          new Date(b.date.replace(/(\d{2}).(\d{2}).(\d{4})/, "$3-$2-$1")) -
-          new Date(a.date.replace(/(\d{2}).(\d{2}).(\d{4})/, "$3-$2-$1"))
-      );
-    setSortedWorkDays(sortedDays);
-  }, [workDays]);
-
   // Tägliche Arbeitszeit
   const calculateDailyWorkTime = (workDay) => {
-    let hours = parseInt(workDay.duration.split(":")[0]);
-    let minutes = parseInt(workDay.duration.split(":")[1]);
+    let hours =
+      parseInt(workDay.end.split(":")[0]) -
+      parseInt(workDay.start.split(":")[0]);
+    let minutes =
+      parseInt(workDay.end.split(":")[1]) -
+      parseInt(workDay.start.split(":")[1]);
+    if (minutes < 0) {
+      hours -= 1;
+      minutes += 60;
+    }
     return hours + minutes / 60;
   };
 
   // Durchschnittliche tägliche Arbeitszeit
-  const calculateAverageDailyWorkTime = (workDays) => {
+  const dailyAverage = (workDays) => {
     const totalDailyWorkTime = workDays.reduce((acc, workDay) => {
       return acc + calculateDailyWorkTime(workDay);
     }, 0);
 
-    return workDays.length > 0 ? totalDailyWorkTime / workDays.length : 0;
+    const average =
+      workDays.length > 0 ? totalDailyWorkTime / workDays.length : 0;
+    return average.toFixed(2);
   };
 
   // Monatliche Arbeitszeit
-  const calculateMonthlyWorkTime = (workDays) => {
+  const monthlyWorktime = (workDays) => {
     return workDays.reduce((acc, workDay) => {
       return acc + calculateDailyWorkTime(workDay);
     }, 0);
   };
 
+  useEffect(() => {
+    console.log(workDays);
+  }, [update]);
+
   return (
     <section className="time-output-section">
       <h2>Bisherige Arbeitszeit</h2>
-      <div>
-        <button
-          onClick={() => setSortedWorkDays([...sortedWorkDays].reverse())}
-        >
-          Älteste-Neueste Toggle
-        </button>
-      </div>
       <table>
         <thead>
           <tr>
@@ -115,7 +110,7 @@ const TimeOutput = () => {
           </tr>
         </thead>
         <tbody>
-          {sortedWorkDays.map((workDay, index) => (
+          {workDays.map((workDay, index) => (
             <tr key={index}>
               {editMode ? (
                 <td>
@@ -150,17 +145,7 @@ const TimeOutput = () => {
               ) : (
                 <td>{workDay.end}</td>
               )}
-              {editMode ? (
-                <td>
-                  <input
-                    type="text"
-                    defaultValue={workDay.duration}
-                    onChange={(e) => setUpdatedDuration(e.target.value)}
-                  ></input>
-                </td>
-              ) : (
-                <td>{workDay.duration}</td>
-              )}
+              <td>{workDay.duration}</td>
               <td className="td-icons">
                 <div onClick={() => setEditMode(!editMode)}>
                   {editMode ? (
@@ -184,18 +169,9 @@ const TimeOutput = () => {
       <article>
         <h2>Gesamtarbeitszeit</h2>
         <h3>
-          Tag:
-          {sortedWorkDays.reduce(
-            (acc, curr) => acc + calculateDailyWorkTime(curr),
-            0
-          )}
-          Stunden
+          Durchschnittliche Tagesarbeitszeit: {dailyAverage(workDays)} Stunden
         </h3>
-        <h3>
-          Durchschnittliche Tagesarbeitszeit:{" "}
-          {calculateAverageDailyWorkTime(sortedWorkDays)} Stunden
-        </h3>
-        <h3>Monat: {calculateMonthlyWorkTime(sortedWorkDays)} Stunden</h3>
+        <h3>Monat: {monthlyWorktime(workDays)} Stunden</h3>
       </article>
     </section>
   );
