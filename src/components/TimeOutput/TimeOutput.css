@@ -53,13 +53,19 @@
   overflow-y: scroll;
 }
 
+.time-output-section tbody::-webkit-scrollbar {
+  display: none;
+}
+
 .time-output-section tbody tr {
-  width: 100%;
-  height: 2rem;
+  width: 95%;
+  height: 3rem;
   margin: 1rem 0;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  box-shadow: var(--shadow);
+  border-radius: 1rem;
 }
 
 .time-output-section tbody tr td {
@@ -71,8 +77,8 @@
 }
 
 .time-output-section tbody tr td input {
-  width: 100%;
-  height: 100%;
+  width: 75%;
+  height: 75%;
 }
 
 .time-output-section tbody tr .td-icons {

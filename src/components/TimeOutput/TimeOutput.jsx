@@ -17,7 +17,6 @@ const TimeOutput = () => {
   const [updatedEnd, setUpdatedEnd] = useState("");
 
   // workDays laden
-
   useEffect(() => {
     if (localStorage.getItem("workDays")) {
       setWorkDays(JSON.parse(localStorage.getItem("workDays")));

@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+:root {
+  --shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
 html {
   font-size: 62.5%;
   overflow-x: hidden;
@@ -37,4 +41,14 @@ table {
 button {
   padding: 0.5rem 1.5rem;
   margin-bottom: 2rem;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: black;
+  color: white;
 }
