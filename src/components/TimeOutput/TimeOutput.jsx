@@ -4,7 +4,6 @@ import EditIcon from "../../assets/icons/EditIcon/EditIcon";
 import { updateContext } from "../../context/Context";
 import DeleteIcon from "../../assets/icons/DeleteIcon/DeleteIcon";
 import SafeIcon from "../../assets/icons/SafeIcon/SafeIcon";
-import TimeChart from "../TimeChart";
 
 const TimeOutput = () => {
   const { update, setUpdate } = useContext(updateContext);
@@ -18,10 +17,14 @@ const TimeOutput = () => {
 
   // workDays laden
   useEffect(() => {
+    localStorage.getItem("workDays")
+      ? setWorkDays(JSON.parse(localStorage.getItem("workDays")))
+      : setWorkDays([]);
+  }, []);
+
+  useEffect(() => {
     if (localStorage.getItem("workDays")) {
       setWorkDays(JSON.parse(localStorage.getItem("workDays")));
-    } else {
-      setWorkDays([]);
     }
   }, [update]);
 
@@ -165,8 +168,6 @@ const TimeOutput = () => {
         </h3>
         <h3>Monat: {monthlyWorktime(workDays)} Stunden</h3>
       </article>
-
-      {/* <TimeChart workDays={workDays} /> */}
     </section>
   );
 };
